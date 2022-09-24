@@ -1,14 +1,16 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-// import { SignIn } from "./SignIn";
+import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 
 const axios = require("axios").default;
 
+
+
 export function Forum(props) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const apiUrl = "http://forum.zyranov.ru/web/api";
- 
+  const [topics, setTopics] = useState([]);
+
   let token = sessionStorage.getItem("token");
   token = JSON.parse(token);
   console.log(token);
@@ -19,20 +21,14 @@ export function Forum(props) {
 
     .then(function(response) {
       console.log(response);
+      setTopics(response.data);
       
-      q(response.data);
     })
     .catch(function(err) {
       console.log(err);
     });
 
-    
-
-    function q(props) {
-      const topics = (props);
-      console.log(topics[0].title);
-
-      if (topics) {
+        
         const rows = topics.map((topic,index) => {
          return <tr key={index}>
          <td>{topic.id}</td>
@@ -64,11 +60,11 @@ export function Forum(props) {
            </tbody>
          </table>
          </div>
-     } 
-     navigate("/signIn");
+     
+     
       
     };
 
     
-  }
+  
 
