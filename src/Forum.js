@@ -20,7 +20,6 @@ export function Forum(props) {
     .then(function(response) {
       console.log(response);
       
-      
       q(response.data);
     })
     .catch(function(err) {
