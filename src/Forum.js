@@ -58,9 +58,7 @@ export function Forum(props) {
            </tbody>
          </table>
          </div>
-     
-     
-      
+         
     };
 
     
