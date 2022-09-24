@@ -28,7 +28,6 @@ export function Forum(props) {
       console.log(err);
     });
 
-        
         const rows = topics.map((topic,index) => {
          return <tr key={index}>
          <td>{topic.id}</td>
