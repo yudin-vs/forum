@@ -8,13 +8,15 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-
+import { useNavigate } from "react-router-dom"
+// import {useState} from 'react'
 const axios = require("axios").default;
 const theme = createTheme();
-
+// const [login, setLogin] = useState(false);
 
 export default function SignIn() {
+  let login = false;
+  const navigate = useNavigate();
   const apiUrl = "http://forum.zyranov.ru/web/api";
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -26,8 +28,16 @@ export default function SignIn() {
         password: data.get("password"),
       })
       .then(function(res) {
-        console.log(res);
+        let token = JSON.stringify(res.data.token);
+        token = JSON.parse(token);
+        sessionStorage.setItem('token', JSON.stringify(token));
+        login = true;
       });
+
+      if (login){
+        navigate("/forum");
+      }
+      
   };
 
   return (
