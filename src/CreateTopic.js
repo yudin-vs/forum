@@ -56,7 +56,7 @@ export default function CreateTopic() {
   </Box>
   <Button 
   variant="contained" 
-  color="secondary" 
+  color="primary" 
   type="submit" sx={{ mr: 2 }}>
     сохранить
   </Button>

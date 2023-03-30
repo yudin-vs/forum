@@ -10,9 +10,10 @@ root.render(
   <HashRouter>
     <Routes>
       <Route exact path="/" element={<BasicCard />} />
-      <Route exact path="BasicCard" element={<BasicCard />} />
-      <Route exact path="SignIn" element={<SignIn />} />
-      <Route exact path="CreateTopic" element={<CreateTopic />} />
+      <Route exact path="/BasicCard" element={<BasicCard />} />
+      <Route exact path="/BasicCard/:props" element={<BasicCard />} />
+      <Route exact path="/SignIn" element={<SignIn />} />
+      <Route exact path="/CreateTopic" element={<CreateTopic />} />
       <Route />
     </Routes>
   </HashRouter>

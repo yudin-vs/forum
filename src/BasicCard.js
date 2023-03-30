@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams  } from "react-router-dom";
+import { Link, useNavigate, useParams  } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { useRef} from "react";
 import { AppBar, Container, Toolbar, 
@@ -59,8 +59,8 @@ export default function BasicCard(effect, dependencies = []) {
 
     function changePage(props) {
       
-      navigate(`/pages/${props}`)
-      return setCurrentPage(props);
+      navigate("/BasicCard/" + props*1)
+      setCurrentPage(props);
     }
     console.log(currentPage);
 
@@ -167,14 +167,14 @@ export default function BasicCard(effect, dependencies = []) {
                   {login?
                   <Button 
                     variant="contained" 
-                    color="secondary"
+                    color="primary"
                     onClick={() => navigate("/CreateTopic")}
                   >
                     Создать тему
                   </Button>:
                   <Button 
                   variant="contained" 
-                  color="secondary"
+                  color="primary"
                   onClick={() => navigate("/SignIn")}
                   >
                     Вход
