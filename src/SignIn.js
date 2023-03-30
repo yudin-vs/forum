@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,36 +9,36 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom"
-// import {useState} from 'react'
+
 const axios = require("axios").default;
 const theme = createTheme();
-// const [login, setLogin] = useState(false);
 
 export default function SignIn() {
-  let login = false;
+  const [login, setLogin] = useState(false);
   const navigate = useNavigate();
-  const apiUrl = "http://forum.zyranov.ru/web/api";
-  const handleSubmit = (event) => {
+  const apiUrl = "http://localhost:8001/web/api";
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    axios
-      .post(`${apiUrl}/users/login`, {
+    try {
+      const res = await axios.post(`${apiUrl}/users/login`, {
         email: data.get("email"),
         password: data.get("password"),
-      })
-      .then(function(res) {
-        let token = JSON.stringify(res.data.token);
-        token = JSON.parse(token);
-        sessionStorage.setItem('token', JSON.stringify(token));
-        login = true;
       });
-
-      if (login){
-        navigate("/forum");
-      }
-      
+      sessionStorage.setItem('token', JSON.stringify(res.data.token));
+      setLogin(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  useEffect(() => {
+    if (login) {
+      navigate("/BasicCard");
+    }
+  }, [login, navigate]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -56,7 +56,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Вход
           </Typography>
           <Box
             component="form"
@@ -90,7 +90,7 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Вход
             </Button>
           </Box>
         </Box>
