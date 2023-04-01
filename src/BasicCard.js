@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { useRef} from "react";
 import { AppBar, Container, Toolbar, 
-  Typography, Box, Paper, Grid, Card, CardContent, Pagination } from "@mui/material/";
+  Typography, Box, Paper, Grid, Card, CardContent, Pagination, CardActions } from "@mui/material/";
 import { makeStyles } from '@material-ui/core/styles'
 
 
@@ -51,8 +51,7 @@ export default function BasicCard(effect, dependencies = []) {
   const [topics, setTopics] = useState([]);
   const isInitialMount = useRef(true);
   const [login, setLogin] = useState(false);
-  //let { index } = useParams();
-  const perPage = 3;
+  const perPage = 5;
   const [currentPage, setCurrentPage] = useState(1)
 
   
@@ -62,7 +61,7 @@ export default function BasicCard(effect, dependencies = []) {
       navigate("/BasicCard/" + props*1)
       setCurrentPage(props);
     }
-    console.log(currentPage);
+    
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -71,37 +70,39 @@ export default function BasicCard(effect, dependencies = []) {
         return effect();
       };
       
-    function fetchData() {
+    async function fetchData() {
        let token = sessionStorage.getItem("token");
-    token = JSON.parse(token);
+       token = JSON.parse(token);
+       const pageSize = 20;
+       
     
-    axios
-      .get(`${apiUrl}/topics`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-  
-      .then(function(response) {
-        setTopics(response.data);
+    try {
+      const res = await axios.get(
+        `${apiUrl}/topics?pageSize=${pageSize}&sortBy=id`,
+         {headers: { Authorization: `Bearer ${token}`}}
+         );
+        
+        setTopics(res.data);
         setLogin(true);
-      })
-      .catch(function(err) {
-        console.log(err);
-      });
+      
+      } catch (error) {
+        console.error(error);
+      };
     }
     fetchData();
     }, []);
 
     function  timestampToDate(unixTimestamp) {
-      var a = new Date(unixTimestamp * 1000);
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds();
-    var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
-    return time;
+      const a = new Date(unixTimestamp * 1000);
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const year = a.getFullYear();
+      const month = months[a.getMonth()];
+      const date = a.getDate();
+      const hour = a.getHours();
+      const min = a.getMinutes();
+      const sec = a.getSeconds();
+      const time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+      return time;
     }
 
 
@@ -223,6 +224,20 @@ export default function BasicCard(effect, dependencies = []) {
                   {timestampToDate(topic.created)}
               </Typography>
             </CardContent>
+            <CardActions>
+              <Button 
+                size="small" 
+                color="primary"
+                onClick={() => {
+                navigate("/editTopic/" + topic.id);
+                }}
+                >
+                edit
+              </Button>
+              <Button size="small" color="primary">
+                delete
+              </Button>
+            </CardActions>
           </Card>
         </Grid>
           ))}
@@ -241,5 +256,4 @@ export default function BasicCard(effect, dependencies = []) {
       )
 }
     
-
 

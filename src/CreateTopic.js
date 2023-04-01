@@ -2,8 +2,8 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
 import TextField from '@mui/material/TextField';
-import { AppBar, Container, Toolbar, IconButton, Typography, Button } from "@mui/material/";
-import { makeStyles } from '@material-ui/core/styles'
+import { AppBar, Container, Toolbar, Typography, Button } from "@mui/material/";
+
 
 const axios = require("axios").default;
 
@@ -16,14 +16,13 @@ export default function CreateTopic() {
     const data = new FormData(document.getElementById('form'));
     let token = sessionStorage.getItem("token");
     token = JSON.parse(token);
-    console.log(data);
+    
     try {
       const res = await axios.post(
         `${apiUrl}/topics`,
         { title: data.get("title"), body: data.get("body") },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
       console.log(res.data);
       navigate("/BasicCard");
     } catch (error) {
