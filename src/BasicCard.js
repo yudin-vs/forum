@@ -5,15 +5,13 @@ import { useRef} from "react";
 import { AppBar, Container, Toolbar, 
   Typography, Box, Paper, Grid, Card, CardContent, Pagination, CardActions } from "@mui/material/";
 import { makeStyles } from '@material-ui/core/styles'
-
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const axios = require("axios").default;
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1
-  },
-  menuButton: {
-    marginRight: theme.spacing(1)
   },
   title: {
     flexGrow:1
@@ -22,24 +20,21 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     color: theme.palette.common.white,
     marginBottom: theme.spacing(4),
-   
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    backgroundPosition: "center"
+    backgroundPosition: "center",
+    boxShadow: "none"
   },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    backgroundOverlay: "rgba(0,0,0,.3)"
-  },
+ 
   mainFeaturesPostContent: {
     position: "relative",
     padding: theme.spacing(6),
-    marginTop: theme.spacing(8)
+    marginTop: theme.spacing(8),
+    boxShadow: "none"
   },
+  cardIcon: {
+    justifyContent: "flex-end"
+  } 
   
 }))
 
@@ -78,7 +73,7 @@ export default function BasicCard(effect, dependencies = []) {
     
     try {
       const res = await axios.get(
-        `${apiUrl}/topics?pageSize=${pageSize}&sortBy=id`,
+        `${apiUrl}/topics?pageSize=${pageSize}&sort=id`,
          {headers: { Authorization: `Bearer ${token}`}}
          );
         
@@ -206,6 +201,28 @@ export default function BasicCard(effect, dependencies = []) {
         <Grid item key={topic.id} md={12}>
           <Card sx={{height: '100%', display: 'flex', flexDirection: 'column'}}>
             <CardContent sx={{ flexGrow: 1 }}>
+            <CardActions className={classes.cardIcon}>
+              
+              <EditIcon
+                size="small" 
+                color="primary"
+                onClick={() => {
+                navigate("/editTopic/" + topic.id);
+                }}
+                >
+                edit
+              </EditIcon>
+              <DeleteIcon
+                size="small"  
+                color="primary"
+                onClick={() => {
+                navigate("/delTopic/" + topic.id);
+                }}
+                >
+                delete
+              </DeleteIcon>
+              
+            </CardActions>
               <Typography gutterBottom variant="h5" component="h2">
                 {topic.title}
               </Typography>
@@ -217,27 +234,14 @@ export default function BasicCard(effect, dependencies = []) {
               variant="body2"
               >
               </Typography>
-              <Typography>
+              <Typography component="h7">
                 Создано пользователем {topic.user.name}
               </Typography>
-              <Typography>
+              <Typography component="h7">
                   {timestampToDate(topic.created)}
               </Typography>
             </CardContent>
-            <CardActions>
-              <Button 
-                size="small" 
-                color="primary"
-                onClick={() => {
-                navigate("/editTopic/" + topic.id);
-                }}
-                >
-                edit
-              </Button>
-              <Button size="small" color="primary">
-                delete
-              </Button>
-            </CardActions>
+           
           </Card>
         </Grid>
           ))}
