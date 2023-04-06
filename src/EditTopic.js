@@ -27,7 +27,7 @@ export default function EditTopics(props) {
         { headers: { Authorization: `Bearer ${token}` } }
       );
   
-      console.log(res.data);
+      
       navigate("/BasicCard");
     } catch (error) {
       console.error(error);

@@ -6,6 +6,8 @@ import BasicCard from "./BasicCard";
 import CreateTopic from "./CreateTopic";
 import EditTopic from "./EditTopic";
 import DelTopic from "./DelTopic";
+import TopicPage from "./TopicPage"
+import CreateMessages from "./CreateMessages"
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -19,7 +21,8 @@ root.render(
       <Route exact path="EditTopic" element={<EditTopic />} />
       <Route exact path="EditTopic/:id" element={<EditTopic />} />
       <Route exact path="DelTopic/:id" element={<DelTopic />} />
-      <Route />
+      <Route exact path="TopicPage/:id" element={<TopicPage />} />
+      <Route exact path="CreateMessages/:id" element={<CreateMessages />} />
     </Routes>
   </HashRouter>
 );

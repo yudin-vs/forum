@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Box } from "@mui/system";
 import TextField from '@mui/material/TextField';
 import { AppBar, Container, Toolbar, Typography, Button } from "@mui/material/";
@@ -7,7 +7,8 @@ import { AppBar, Container, Toolbar, Typography, Button } from "@mui/material/";
 
 const axios = require("axios").default;
 
-export default function CreateTopic() {
+export default function CreateTopic(props) {
+  const { id } = useParams(); 
   const navigate = useNavigate();
   const apiUrl = "http://localhost:8001/web/api";
 
@@ -16,15 +17,15 @@ export default function CreateTopic() {
     const data = new FormData(document.getElementById('form'));
     let token = sessionStorage.getItem("token");
     token = JSON.parse(token);
-    
+    console.log(id);
     try {
       const res = await axios.post(
-        `${apiUrl}/topics`,
-        { title: data.get("title"), body: data.get("body") },
+        `${apiUrl}/messages`, 
+        { content: data.get("content"), topicId:(id), body: data.get("body")  },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
-      navigate("/BasicCard");
+      navigate("/TopicPage/" + id);
     } catch (error) {
       console.error(error);
     }
@@ -46,10 +47,10 @@ export default function CreateTopic() {
       margin="normal"
       required
       fullWidth
-      id="title"
-      label="title"
-      name="title"
-      autoComplete="title"
+      id="content"
+      label="content"
+      name="content"
+      autoComplete="content"
       autoFocus
     />
   </Box>
@@ -59,7 +60,7 @@ export default function CreateTopic() {
   type="submit" sx={{ mr: 2 }}>
     сохранить
   </Button>
-  <Button variant="outlined" color="inherit" component={Link} to="/BasicCard">
+  <Button variant="outlined" color="inherit" component={Link} to={"/TopicPage/" + id}>
     отмена
   </Button>
 </form>

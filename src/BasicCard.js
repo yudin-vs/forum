@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Link, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { useRef} from "react";
@@ -7,6 +7,7 @@ import { AppBar, Container, Toolbar,
 import { makeStyles } from '@material-ui/core/styles'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ChatIcon from '@mui/icons-material/Chat';
 
 const axios = require("axios").default;
 const useStyles = makeStyles((theme) => ({
@@ -48,8 +49,10 @@ export default function BasicCard(effect, dependencies = []) {
   const [login, setLogin] = useState(false);
   const perPage = 5;
   const [currentPage, setCurrentPage] = useState(1)
-
-  
+  const [currentUserId, setCurrentUserId] = useState(null);
+  let token = sessionStorage.getItem("token");
+  token = JSON.parse(token);
+  const pageSize = 20;
 
     function changePage(props) {
       
@@ -57,8 +60,9 @@ export default function BasicCard(effect, dependencies = []) {
       setCurrentPage(props);
     }
     
-
+  
   useEffect(() => {
+    if (!token) return
     if (isInitialMount.current) {
         isInitialMount.current = false;
       } else {
@@ -66,26 +70,31 @@ export default function BasicCard(effect, dependencies = []) {
       };
       
     async function fetchData() {
-       let token = sessionStorage.getItem("token");
-       token = JSON.parse(token);
-       const pageSize = 20;
        
-    
-    try {
-      const res = await axios.get(
-        `${apiUrl}/topics?pageSize=${pageSize}&sort=id`,
-         {headers: { Authorization: `Bearer ${token}`}}
-         );
-        
-        setTopics(res.data);
-        setLogin(true);
+       
       
+       try {
+        const request1 = axios.get(
+          `${apiUrl}/topics?pageSize=${pageSize}&sort=id`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const request2 = axios.get(`${apiUrl}/users/profile`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const [res1, res2] = await Promise.all([request1, request2]);
+    
+        
+        setTopics(res1.data);
+        setLogin(true);
+        setCurrentUserId(res2.data.id);
       } catch (error) {
         console.error(error);
-      };
+      }
+      
     }
+  
     fetchData();
-    }, []);
+    }, [token])
 
     function  timestampToDate(unixTimestamp) {
       const a = new Date(unixTimestamp * 1000);
@@ -200,44 +209,31 @@ export default function BasicCard(effect, dependencies = []) {
       {topics.slice((currentPage-1)*perPage, currentPage*perPage).map((topic) => (
         <Grid item key={topic.id} md={12}>
           <Card sx={{height: '100%', display: 'flex', flexDirection: 'column'}}>
-            <CardContent sx={{ flexGrow: 1 }}>
-            <CardActions className={classes.cardIcon}>
-              
-              <EditIcon
-                size="small" 
-                color="primary"
+            <CardContent sx={{ flexGrow: 1 }} >
+            
+                
+              <Typography 
+                gutterBottom variant="h5" 
+                component="h2"
                 onClick={() => {
-                navigate("/editTopic/" + topic.id);
-                }}
-                >
-                edit
-              </EditIcon>
-              <DeleteIcon
-                size="small"  
-                color="primary"
-                onClick={() => {
-                navigate("/delTopic/" + topic.id);
-                }}
-                >
-                delete
-              </DeleteIcon>
-              
-            </CardActions>
-              <Typography gutterBottom variant="h5" component="h2">
+            navigate("/topicPage/" + topic.id);
+          }}
+          >
                 {topic.title}
               </Typography>
               <Typography>
-                {topic.content}</Typography>
+                {topic.content}
+              </Typography>
               <Typography 
               sx={{mt: 2}}
               color="text.secondary"
               variant="body2"
               >
               </Typography>
-              <Typography component="h7">
+              <Typography variant="caption">
                 Создано пользователем {topic.user.name}
               </Typography>
-              <Typography component="h7">
+              <Typography variant="caption">
                   {timestampToDate(topic.created)}
               </Typography>
             </CardContent>

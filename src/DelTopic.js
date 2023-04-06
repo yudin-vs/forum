@@ -23,7 +23,7 @@ export default function DelTopic(props) {
         { headers: { Authorization: `Bearer ${token}` } }
       );
   
-      console.log(res);
+      
       navigate("/BasicCard");
     } catch (error) {
       console.error(error);
