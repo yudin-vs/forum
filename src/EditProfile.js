@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
 import TextField from '@mui/material/TextField';
 import { AppBar, Container, Toolbar, Typography, Button } from "@mui/material/";
@@ -7,8 +7,6 @@ import { AppBar, Container, Toolbar, Typography, Button } from "@mui/material/";
 const axios = require("axios").default;
 
 export default function EditTopics(props) {
- 
-  const { id } = useParams();
   const navigate = useNavigate();
   const apiUrl = "http://localhost:8001/web/api";
   
@@ -18,12 +16,15 @@ export default function EditTopics(props) {
     const data = new FormData(document.getElementById('form'));
     let token = sessionStorage.getItem("token");
     token = JSON.parse(token);
-    console.log(data);
+    
 
     try {
-      const res = await axios.put(
-        `${apiUrl}/topics/${id}`,
-        { title: data.get("title") },
+      const res = await axios.patch(
+        `${apiUrl}/users/profile`,
+        { name: data.get("name"), 
+        email: data.get("email"), 
+        password: data.get("password"),
+        body: data.get("body") },
         { headers: { Authorization: `Bearer ${token}` } }
       );
   
@@ -48,21 +49,40 @@ export default function EditTopics(props) {
           </AppBar>
           <Container>
           <form id="form" onSubmit={handleFormSubmit}>
-      <Box sx={{ mt: 10 }}>
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="title"
-          label="title"
-          name="title"
-          autoComplete="title"
-          autoFocus
-          
-        />
-      </Box>
-      <Button 
-      variant="contained" 
+            <Box sx={{ mt: 10 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="имя"
+              name="name"
+              autoComplete="name"
+              autoFocus
+                />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="электронная почта"
+              name="email"
+              autoComplete="email"
+              autoFocus
+                />
+                <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="password"
+              label="пароль"
+              name="password"
+              autoComplete="password"
+              autoFocus
+                />    
+            </Box>
+            <Button 
+                variant="contained" 
       color="primary" 
       type="submit" sx={{ mr: 2 }}>
         сохранить
@@ -71,7 +91,7 @@ export default function EditTopics(props) {
         отмена
       </Button>
     </form>
-        </Container>
+          </Container>
         </>
       )
 }

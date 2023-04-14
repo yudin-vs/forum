@@ -47,7 +47,7 @@ export default function CreateTopic() {
       required
       fullWidth
       id="title"
-      label="title"
+      label="тема"
       name="title"
       autoComplete="title"
       autoFocus

@@ -5,9 +5,10 @@ import SignIn from "./SignIn";
 import BasicCard from "./BasicCard";
 import CreateTopic from "./CreateTopic";
 import EditTopic from "./EditTopic";
-import DelTopic from "./DelTopic";
 import TopicPage from "./TopicPage"
 import CreateMessages from "./CreateMessages"
+import EditProfile from "./EditProfile"
+import ModalDelTopic from "./ModalDelTopic";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -20,9 +21,10 @@ root.render(
       <Route exact path="CreateTopic" element={<CreateTopic />} />
       <Route exact path="EditTopic" element={<EditTopic />} />
       <Route exact path="EditTopic/:id" element={<EditTopic />} />
-      <Route exact path="DelTopic/:id" element={<DelTopic />} />
       <Route exact path="TopicPage/:id" element={<TopicPage />} />
       <Route exact path="CreateMessages/:id" element={<CreateMessages />} />
+      <Route exact path="EditProfile/" element={<EditProfile />} />
+      <Route exact path="ModalDelTopic" element={<ModalDelTopic />} />
     </Routes>
   </HashRouter>
 );

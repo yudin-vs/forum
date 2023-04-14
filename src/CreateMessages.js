@@ -36,7 +36,7 @@ export default function CreateTopic(props) {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Форум Ху..уМ
+            Форум
           </Typography>
         </Toolbar>
       </AppBar>
@@ -48,7 +48,7 @@ export default function CreateTopic(props) {
       required
       fullWidth
       id="content"
-      label="content"
+      label="оставте сообщение"
       name="content"
       autoComplete="content"
       autoFocus
