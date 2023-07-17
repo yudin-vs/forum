@@ -1,0 +1,6 @@
+const File = new Schema({
+  name: { type: String, required: true },
+  url: { type: String, required: true }
+});
+
+module.exports = model('File', File);
